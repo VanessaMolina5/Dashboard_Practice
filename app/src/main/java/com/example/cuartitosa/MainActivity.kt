@@ -3,27 +3,56 @@ package com.example.cuartitosa
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import com.example.cuartitosa.ui.theme.CuartitosaTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.MaterialTheme.colorScheme
-import com.example.cuartitosa.Navigation.AppNavigation
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.runtime.*
+import androidx.compose.ui.Modifier
+import com.example.cuartitosa.ui.theme.CuartitosATheme
+import com.example.cuartitosa.ui.theme.CuartitosATheme
 
 class MainActivity : ComponentActivity() {
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             CuartitosATheme {
-                Surface(color = colorScheme.background) {
-                    AppNavigation()
-                }
+                var tabSeleccionado by remember { mutableIntStateOf(0) }
+                val estudiantes = remember { mutableStateListOf<Estudiante>() }
+
+                Scaffold(
+                    topBar = {
+                        CenterAlignedTopAppBar(
+                            title = { Text("Sistema de Estudiantes") },
+                            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                                containerColor = MaterialTheme.colorScheme.primaryContainer
+                            )
+                        )
+                    }
+                ) { paddingValues ->
+                    Column(modifier = Modifier.padding(paddingValues)) {
+                        TabRow(selectedTabIndex = tabSeleccionado) {
+                            Tab(
+                                selected = tabSeleccionado == 0,
+                                onClick = { tabSeleccionado = 0 },
+                                text = { Text("3 Vistas") }
+                            )
+                            Tab(
+                                selected = tabSeleccionado == 1,
+                                onClick = { tabSeleccionado = 1 },
+                                text = { Text("3 Vistas") }
+                            )
+                        }
+                        when (tabSeleccionado) {
+                            0 -> TresVistas1(estudiantes)
+                            1 -> TresVistas2(estudiantes)
+                        }
+                    }
                 }
             }
         }
     }
-
+}
 
 
 
